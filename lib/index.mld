@@ -19,6 +19,7 @@ high-level interface for using the library.
 # StringSearch.(search_rightmost ~k:2 ~pattern:"abcd" ~text:"abcd" |> report);;
 - : string = "Pattern matched with 0 errors at character 4 of text"
 # StringSearch.(search_rightmost ~k:2 ~pattern:"abcd" ~text:"abd" |> report);;
+- : string = "Pattern matched with 2 errors at character 3 of text"
 ]}
 
 {2 Mid level interface example}
