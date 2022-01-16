@@ -1,12 +1,17 @@
+(** This module contains the main parts of the shift-or variants of the Wu and
+    Manber algorithm. *)
+
 open Utils
 module I = Int63
 
 module BitOps = struct
+  (** A collection of bitwise operations used in the Wu and Manber algorithm. *)
+
   let shift_or ~mismatch x : I.t =
     I.lshift1 x
     |> I.logor mismatch
 
-  let initial_bv ~k : I.t array =
+  let initial_bvs ~k : I.t array =
     let arr = Array.make (k+1) I.minus_one in
     for i = 1 to k do
       arr.(i) <- I.lshift1 arr.(i-1)
@@ -39,7 +44,11 @@ module MakeWuManber (P : Patterns.Pattern) = struct
     done;
     output
 
-  let next_bvs_leftmost ~pattern_length ~mismatch (input : I.t array) : I.t array =
+end
+
+module MakeLeftmostWuManber (P : Patterns.Pattern) = struct
+  open BitOps
+  let next_bvs ~pattern_length ~mismatch (input : I.t array) : I.t array =
     (* Self Transitions, i.e. R2/D2/S2 *)
     let len = Array.length input in
     let output = Array.map (shift_or ~mismatch) input in
@@ -60,5 +69,5 @@ module MakeWuManber (P : Patterns.Pattern) = struct
     output
 
   let feed_sentinel ~pattern_length (input : I.t array) : I.t array =
-    next_bvs_leftmost ~pattern_length ~mismatch:(I.minus_one) input
+    next_bvs ~pattern_length ~mismatch:(I.minus_one) input
 end

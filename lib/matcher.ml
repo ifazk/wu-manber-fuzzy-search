@@ -13,7 +13,7 @@ module SimpleMismatch (P : PatternWithFoldRight) = struct
     P.fold_right (push_mismatch char) pattern I.zero
 end
 
-module type MisMatcher = sig
+module type Matcher = sig
   type pattern
   type elem
 
@@ -23,7 +23,7 @@ module type MisMatcher = sig
     end
 end
 
-module MakeSlowMatcher (P : PatternWithFoldRight) : MisMatcher with type pattern := P.t and type elem := P.elem = struct
+module MakeSlowMatcher (P : PatternWithFoldRight) : Matcher with type pattern := P.t and type elem := P.elem = struct
   include SimpleMismatch (P)
   class matcher pattern =
     object (_)
@@ -33,7 +33,7 @@ module MakeSlowMatcher (P : PatternWithFoldRight) : MisMatcher with type pattern
     end
 end
 
-module MakeArrayMatcher (P : PatternWithIndexableElements) : MisMatcher with type pattern := P.t and type elem := P.elem = struct
+module MakeArrayMatcher (P : PatternWithIndexableElements) : Matcher with type pattern := P.t and type elem := P.elem = struct
   include SimpleMismatch (P)
   class matcher pattern =
     object (_)
@@ -46,7 +46,7 @@ module MakeArrayMatcher (P : PatternWithIndexableElements) : MisMatcher with typ
     end
 end
 
-module MakeHashTblMatcher (P : PatternWithFoldRight) : MisMatcher with type pattern := P.t and type elem := P.elem = struct
+module MakeHashTblMatcher (P : PatternWithFoldRight) : Matcher with type pattern := P.t and type elem := P.elem = struct
   include SimpleMismatch (P)
   class matcher pattern =
     object (_)

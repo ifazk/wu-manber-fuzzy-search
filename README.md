@@ -16,6 +16,9 @@ PRs are welcome, as long as you are understand that you would be releasing your
 code under CC0.
 
 Here are extensions that I would like to have in the future.
+- Add versions of the algorithm that mutates an array instead of creating new
+  arrays all the time.
+- Add specialized versions for exact matches and small error limits.
 - Supparting multi-match and limited expressions.
 - Full Regular Expressions Support.
 

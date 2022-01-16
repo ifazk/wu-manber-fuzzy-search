@@ -1,6 +1,6 @@
 open WuManber
 
-module Make (P : Patterns.Pattern) (M : Matcher.MisMatcher with type pattern := P.t and type elem := P.elem ) = struct
+module Make (P : Patterns.Pattern) (M : Matcher.Matcher with type pattern := P.t and type elem := P.elem ) = struct
   include MakeWuManber (P)
 
   let first_match ~pattern ~k (s : P.elem Seq.t) =
@@ -15,7 +15,9 @@ module Make (P : Patterns.Pattern) (M : Matcher.MisMatcher with type pattern := 
           | Seq.Nil -> None
         end
     in
-    find 0 (BitOps.initial_bv ~k) s
+    find 0 (BitOps.initial_bvs ~k) s
+
+  include MakeLeftmostWuManber (P)
 
   let first_leftmost_match ~pattern ~k (s : P.elem Seq.t) =
     let pattern_length = P.length pattern in
@@ -35,11 +37,11 @@ module Make (P : Patterns.Pattern) (M : Matcher.MisMatcher with type pattern := 
       | Some n -> Some (count, n)
       | None ->
         begin match s () with
-          | Seq.Cons (c, s) -> find (count + 1) (next_bvs_leftmost ~pattern_length ~mismatch:(matcher#mismatch c) bvs) s
+          | Seq.Cons (c, s) -> find (count + 1) (next_bvs ~pattern_length ~mismatch:(matcher#mismatch c) bvs) s
           | Seq.Nil -> find_sentinel count bvs k
         end
     in
-    find 0 (BitOps.initial_bv ~k) s
+    find 0 (BitOps.initial_bvs ~k) s
 
   let report = function
     | None -> "Could not find pattern in text"

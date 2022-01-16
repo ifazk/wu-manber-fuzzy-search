@@ -1,3 +1,4 @@
 (library
  (name Wu_Manber)
+ (public_name wu-manber)
  (libraries optint))

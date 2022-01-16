@@ -1,6 +1,8 @@
 (** An module for fuzzy searching in strings. *)
 
 module Pattern = struct
+  (** Module collecting operations for strings. *)
+
   type t = string
 
   type elem = char
