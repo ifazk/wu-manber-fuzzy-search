@@ -1,11 +1,11 @@
 open WuManber
 
-module Make (P : Matcher.Pattern) (M : Matcher.MisMatcher with type pattern := P.t and type elem := P.elem ) = struct
+module Make (P : Patterns.Pattern) (M : Matcher.MisMatcher with type pattern := P.t and type elem := P.elem ) = struct
   include MakeWuManber (P)
 
   let first_match ~pattern ~k (s : P.elem Seq.t) =
-    let matcher = new M.matcher pattern in
     let pattern_length = P.length pattern in
+    let matcher = new M.matcher pattern in
     let rec find count bvs s =
       match BitOps.match_error ~pattern_length bvs with
       | Some n -> Some (count, n, bvs)
@@ -18,8 +18,8 @@ module Make (P : Matcher.Pattern) (M : Matcher.MisMatcher with type pattern := P
     find 0 (BitOps.initial_bv ~k) s
 
   let first_leftmost_match ~pattern ~k (s : P.elem Seq.t) =
-    let matcher = new M.matcher pattern in
     let pattern_length = P.length pattern in
+    let matcher = new M.matcher pattern in
     let rec find_sentinel count bvs n =
       if n = 0 then
         None

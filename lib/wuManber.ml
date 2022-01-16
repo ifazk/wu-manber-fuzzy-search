@@ -22,7 +22,7 @@ module BitOps = struct
     |> Option.is_some
 end
 
-module MakeWuManber (P : Matcher.Pattern) = struct
+module MakeWuManber (P : Patterns.Pattern) = struct
   open BitOps
   let next_bvs ~mismatch (input : I.t array) : I.t array =
     (* Self Transitions, i.e. R2/D2/S2 *)

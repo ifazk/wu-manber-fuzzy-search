@@ -2,7 +2,7 @@
 
 open WuManber
 
-module Make (P : Matcher.PatternWithFoldLeft) = struct
+module Make (P : Patterns.PatternWithFoldLeft) = struct
   include MakeWuManber (P)
 
   include Matcher.SimpleMismatch (P)
