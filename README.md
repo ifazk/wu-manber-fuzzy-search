@@ -8,7 +8,7 @@ originally introduced by Baeza-Yates and Gonnet.
 
 I provide two variants of the algorithm.
 1. The original version from Wu and Manber's technical report.
-2. A leftmost match variant, where delete edits are skipped at the end of the
+2. A rightmost match variant, where delete edits are skipped at the end of the
    pattern unless at the very end of text. This reports better edit distances.
 
 # Future Work
@@ -23,7 +23,7 @@ Here are extensions that I would like to have in the future.
 - Full Regular Expressions Support.
 
 The limited expressions support should not be too difficult, but I haven't
-thought about if the leftmost match variant has weird interactions with limited
+thought about if the rightmost match variant has weird interactions with limited
 expressions.
 I don't currently have a strong enough understanding the full regular
 expressions part of Wu and Manber's report.

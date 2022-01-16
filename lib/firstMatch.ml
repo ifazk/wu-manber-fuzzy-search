@@ -17,9 +17,9 @@ module Make (P : Patterns.Pattern) (M : Matcher.Matcher with type pattern := P.t
     in
     find 0 (BitOps.initial_bvs ~k) s
 
-  include MakeLeftmostWuManber (P)
+  include MakeRightmostWuManber (P)
 
-  let first_leftmost_match ~pattern ~k (s : P.elem Seq.t) =
+  let first_rightmost_match ~pattern ~k (s : P.elem Seq.t) =
     let pattern_length = P.length pattern in
     let matcher = new M.matcher pattern in
     let rec find_sentinel count bvs n =

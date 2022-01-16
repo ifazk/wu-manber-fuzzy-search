@@ -3,3 +3,33 @@
 {1 Library wu-manber}
 
 The entry point of this library is the module: {!module-Wu_Manber}.
+
+{2 High level interface example}
+
+We currently only provide the functions in {!module-Wu_Manber.StringSearch} as a
+high-level interface for using the library.
+
+{[
+# #require "wu-manber";;
+# open Wu_Manber;;
+# StringSearch.(search ~k:2 ~pattern:"abcd" ~text:"abcd" |> report);;
+- : string = "Pattern matched with 2 errors at character 2 of text"
+# StringSearch.(search ~k:2 ~pattern:"abcd" ~text:"abd" |> report);;
+- : string = "Pattern matched with 2 errors at character 2 of text"
+# StringSearch.(search_rightmost ~k:2 ~pattern:"abcd" ~text:"abcd" |> report);;
+- : string = "Pattern matched with 0 errors at character 4 of text"
+# StringSearch.(search_rightmost ~k:2 ~pattern:"abcd" ~text:"abd" |> report);;
+]}
+
+{2 Mid level interface example}
+
+We currently only provide the functors in {!module-Wu_Manber.FirstMatch} as a
+mid-level interface.
+
+Examples of how this interface is used can be found in the code for
+{!module-Wu_Manber.StringSearch}.
+
+{2 Low level interface example}
+
+An example of how to use the low level interfaces of the library can be found in
+the module: {!module-Wu_Manber.FirstMatch}.

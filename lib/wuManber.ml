@@ -46,7 +46,7 @@ module MakeWuManber (P : Patterns.Pattern) = struct
 
 end
 
-module MakeLeftmostWuManber (P : Patterns.Pattern) = struct
+module MakeRightmostWuManber (P : Patterns.Pattern) = struct
   open BitOps
   let next_bvs ~pattern_length ~mismatch (input : I.t array) : I.t array =
     (* Self Transitions, i.e. R2/D2/S2 *)

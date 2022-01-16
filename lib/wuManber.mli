@@ -31,10 +31,10 @@ module MakeWuManber (P : Patterns.Pattern) : sig
   (** [next_bvs ~mismatch bvs] produces an updated bitvector array based on [~mismatch]. *)
 end
 
-module MakeLeftmostWuManber (P : Patterns.Pattern) : sig
-  (** Wu and Manber algorithm modified for leftmost matches. *)
+module MakeRightmostWuManber (P : Patterns.Pattern) : sig
+  (** Wu and Manber algorithm modified for rightmost matches. *)
 
-  (** The leftmost version of the algorithm requires the user to feed [k]
+  (** The rightmost version of the algorithm requires the user to feed [k]
       sentinel characters into the algorithm at the end of the text to get
       matches near the end, where [k] is the error limit that the algorithm was
       started with. See the code for the {!FirstMatch} module for an example. *)

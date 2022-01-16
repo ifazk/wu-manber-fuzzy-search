@@ -13,7 +13,7 @@ module Make (P : Patterns.PatternWithFoldLeft) = struct
       WuManber.BitOps.(initial_bvs ~k)
       text
 
-  include MakeLeftmostWuManber (P)
+  include MakeRightmostWuManber (P)
 
   let do_slow_leftmost ~k ~pattern ~sentinels ~text =
     let rec int_fold ~f ~n ~init =

@@ -50,8 +50,8 @@ let search ~k ~pattern ~text =
   let seq = String.to_seq text in
   FirstMatch.first_match ~pattern ~k seq
 
-let search_leftmost ~k ~pattern ~text =
+let search_rightmost ~k ~pattern ~text =
   let seq = String.to_seq text in
-  FirstMatch.first_leftmost_match ~pattern ~k seq
+  FirstMatch.first_rightmost_match ~pattern ~k seq
 
 let report = FirstMatch.report
