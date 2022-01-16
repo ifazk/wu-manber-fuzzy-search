@@ -10,17 +10,17 @@ module Make
   val first_match :
     pattern:P.t ->
     k:int -> P.elem Seq.t -> (int * int) option
-  (** Searches for the first match in a module using the basic Wu and Manber
+  (** Searches for the first match in a sequence using the basic Wu and Manber
       algorithm. [~pattern] must have length less than or equal [63]. *)
 
   val first_rightmost_match :
     pattern:P.t -> k:int -> P.elem Seq.t -> (int * int) option
-  (** Searches for the first match in a module using the rightmost match version
+  (** Searches for the first match in a sequence using the rightmost match version
       of the Wu and Manber algorithm. [~pattern] must have length less than or
       equal [63]. *)
 
   val report : (int * int) option -> string
-  (** [report match] produces a texual description of the results of the above
+  (** [report] produces a texual description of the results of the above
       functions. *)
 end
 (** The [Make (P) (M)] creates a set of functions for finding the first match in

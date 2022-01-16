@@ -17,4 +17,4 @@
    "\| algorithm for short patterns.
  )
  (tags ("wu-manber" "baeza-yates-gonnet" "bitap" "algorithm" "levenshtein" "demarau-levenshtein" "edit" "distance" "approximate" "fuzzy" "string" "search" "matching"))
- (depends (ocaml (>= 4.10.0)) (optint (>= 0.1.0)) (ppx_inline_test :with-test)))
+ (depends (ocaml (>= 4.10.0)) (optint (>= 0.1.0))))

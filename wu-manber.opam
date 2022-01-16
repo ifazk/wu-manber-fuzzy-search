@@ -31,7 +31,6 @@ depends: [
   "dune" {>= "2.8"}
   "ocaml" {>= "4.10.0"}
   "optint" {>= "0.1.0"}
-  "ppx_inline_test" {with-test}
   "odoc" {with-doc}
 ]
 build: [
