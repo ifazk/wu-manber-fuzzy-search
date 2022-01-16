@@ -1,3 +1,5 @@
+(** An module for fuzzy searching in strings. *)
+
 module Pattern = struct
   type t = string
 
@@ -7,9 +9,29 @@ module Pattern = struct
 
   let elem_eq = Char.equal
 
-  let fold_left = Stdlib.String.fold_left
+  let fold_left f init s =
+    let s = Bytes.unsafe_of_string s in
+    let n = Bytes.length s in
+    let rec loop acc i =
+      if i = n then
+        acc
+      else
+        let x = Bytes.unsafe_get s i in
+        loop (f acc x) i
+    in
+    loop init 0
 
-  let fold_right = Stdlib.String.fold_right
+  let fold_right f s init =
+    let s = Bytes.unsafe_of_string s in
+    let n = Bytes.length s in
+    let rec loop acc i =
+      if i = n then
+        acc
+      else
+        let x = Bytes.unsafe_get s ((n - 1) - i) in
+        loop (f x acc) i
+    in
+    loop init 0
 
   let int_of_elem = int_of_char
 
@@ -20,13 +42,12 @@ end
 
 module ArrayMatcher = Matcher.MakeArrayMatcher (Pattern)
 
-include FirstMatch.Make (Pattern) (ArrayMatcher)
+module FirstMatch = FirstMatch.Make (Pattern) (ArrayMatcher)
 
 let search ~k ~pattern ~text =
   let seq = String.to_seq text in
-  first_match ~pattern ~k seq
-
+  FirstMatch.first_match ~pattern ~k seq
 
 let search_leftmost ~k ~pattern ~text =
   let seq = String.to_seq text in
-  first_leftmost_match ~pattern ~k seq
+  FirstMatch.first_leftmost_match ~pattern ~k seq
