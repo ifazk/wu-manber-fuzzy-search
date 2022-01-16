@@ -1,6 +1,8 @@
 (lang dune 2.8)
 (name wu-manber)
 
+(cram enable)
+
 (generate_opam_files true)
 (license CC0-1.0)
 (authors "Ifaz Kabir")

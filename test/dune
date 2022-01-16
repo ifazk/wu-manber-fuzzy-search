@@ -1,0 +1,7 @@
+(executable
+  (name string_tests)
+  (public_name string_tests)
+  (libraries Wu_Manber))
+
+(cram
+ (deps %{bin:string_tests}))
