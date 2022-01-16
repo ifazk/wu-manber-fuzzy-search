@@ -1,4 +1,4 @@
-(** An module for fuzzy searching in strings. *)
+(** An module for fuzzy searching in strings *)
 
 module Pattern = struct
   (** Module collecting operations for strings. *)
@@ -19,7 +19,7 @@ module Pattern = struct
         acc
       else
         let x = Bytes.unsafe_get s i in
-        loop (f acc x) i
+        loop (f acc x) (i + 1)
     in
     loop init 0
 
@@ -31,7 +31,7 @@ module Pattern = struct
         acc
       else
         let x = Bytes.unsafe_get s ((n - 1) - i) in
-        loop (f x acc) i
+        loop (f x acc) (i + 1)
     in
     loop init 0
 
@@ -53,3 +53,5 @@ let search ~k ~pattern ~text =
 let search_leftmost ~k ~pattern ~text =
   let seq = String.to_seq text in
   FirstMatch.first_leftmost_match ~pattern ~k seq
+
+let report = FirstMatch.report

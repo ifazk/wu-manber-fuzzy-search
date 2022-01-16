@@ -1,5 +1,5 @@
 (** This module contains the main parts of the shift-or variant of the Wu and
-    Manber algorithm. *)
+    Manber algorithm *)
 
 module BitOps : sig
   (** A collection of bitwise operations used in the Wu and Manber algorithm. *)
