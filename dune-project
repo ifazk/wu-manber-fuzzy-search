@@ -9,7 +9,7 @@
 (maintainers "Ifaz Kabir")
 (source (github ifazk/wu-manber))
 (documentation https://ifazk.github.io/wu-manber/)
-(version unreleased)
+(version 0.1.0)
 
 (package
  (name wu-manber)
