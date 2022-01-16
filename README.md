@@ -11,6 +11,10 @@ I provide two variants of the algorithm.
 2. A rightmost match variant, where delete edits are skipped at the end of the
    pattern unless at the very end of text. This reports better edit distances.
 
+# Documentation
+The documentation for the library can be found
+[here](https://ifazk.github.io/wu-manber/).
+
 # Future Work
 PRs are welcome, as long as you are understand that you would be releasing your
 code under CC0.
@@ -21,6 +25,7 @@ Here are extensions that I would like to have in the future.
 - Add specialized versions for exact matches and small error limits.
 - Supparting multi-match and limited expressions.
 - Full Regular Expressions Support.
+- Support Demarau Levenshtein distances.
 
 The limited expressions support should not be too difficult, but I haven't
 thought about if the rightmost match variant has weird interactions with limited
