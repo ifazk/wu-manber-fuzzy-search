@@ -1,0 +1,47 @@
+open WuManber
+
+module Make (P : Matcher.Pattern) (M : Matcher.MisMatcher with type pattern := P.t and type elem := P.elem ) = struct
+  include MakeWuManber (P)
+
+  let first_match ~pattern ~k (s : P.elem Seq.t) =
+    let matcher = new M.matcher pattern in
+    let pattern_length = P.length pattern in
+    let rec find count bvs s =
+      match BitOps.match_error ~pattern_length bvs with
+      | Some n -> Some (count, n, bvs)
+      | None ->
+        begin match s () with
+          | Seq.Cons (c, s) -> find (count + 1) (next_bvs ~mismatch:(matcher#mismatch c) bvs) s
+          | Seq.Nil -> None
+        end
+    in
+    find 0 (BitOps.initial_bv ~k) s
+
+  let first_leftmost_match ~pattern ~k (s : P.elem Seq.t) =
+    let matcher = new M.matcher pattern in
+    let pattern_length = P.length pattern in
+    let rec find_sentinel count bvs n =
+      if n = 0 then
+        None
+      else
+        let bvs = feed_sentinel ~pattern_length bvs in
+        match BitOps.match_error ~pattern_length bvs with
+        | Some n -> Some (count, n)
+        | None ->
+          find_sentinel count bvs (n - 1)
+    in
+    let rec find count bvs s =
+      match BitOps.match_error ~pattern_length bvs with
+      | Some n -> Some (count, n)
+      | None ->
+        begin match s () with
+          | Seq.Cons (c, s) -> find (count + 1) (next_bvs_leftmost ~pattern_length ~mismatch:(matcher#mismatch c) bvs) s
+          | Seq.Nil -> find_sentinel count bvs k
+        end
+    in
+    find 0 (BitOps.initial_bv ~k) s
+
+  let report = function
+    | None -> "Could not find pattern in text"
+    | Some (c, e) -> Printf.sprintf "Pattern matched with %d errors at character %d of text" e c
+end

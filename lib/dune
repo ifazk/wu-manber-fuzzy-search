@@ -1,0 +1,3 @@
+(library
+ (name Wu_Manber)
+ (libraries optint))
