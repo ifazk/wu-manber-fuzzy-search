@@ -7,8 +7,7 @@ The entry point of this library is the module: {!module-Wu_Manber}.
 {2 High level interface example}
 
 We currently only provide the functions in {!module-Wu_Manber.StringSearch} as a
-high-level interface for using the library. The code for the module would be a
-good place to start to figure out how to use the library.
+high-level interface for using the library.
 
 {[
 # #require "wu-manber";;
