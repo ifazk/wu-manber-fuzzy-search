@@ -2,18 +2,48 @@
 An OCaml Implementation of the wu-manber fuzzy search algorithm using `Int63`
 from the `optint` package as the underlying bitvectors.
 
+The library can be used to search for a keyword/pattern in a body of text while
+allowing for spelling errors. We use Levenshtein distances as the notion of
+spelling errors, and the functions in the library take some error limit `k` and
+searches for substrings in the text with Levenshtein distance less than `k` from
+the pattern.
+
+# Wu and Manber variants
+
 I use the shift-or variant of the algorithm to save some bitwise operations.
 This is also called the `bitap` algorithm, and the shift-or version was
 originally introduced by Baeza-Yates and Gonnet.
 
-I provide two variants of the algorithm.
+Even for the shift-or version, I provide two variants of the algorithm.
 1. The original version from Wu and Manber's technical report.
-2. A rightmost match variant, where delete edits are skipped at the end of the
-   pattern unless at the very end of text. This reports better edit distances.
+2. A right-leaning variant, where delete edits are skipped at the end of the
+   pattern unless at the very end of text. This reports better edit distances is
+   some circumstances.
+
+The right-leaning variant is guaranteed to find a match if and only if the
+original algorithm finds a match, and the error count reported by the variant is
+guaranteed to be no worse than the original.
+But the variant is a little harder to use since extra work is needed to check
+for matches at the end of the text.
 
 # Documentation
 The documentation for the library can be found
 [here](https://ifazk.github.io/wu-manber/).
+
+# Examples
+
+```ocaml
+# #require "wu-manber";;
+# open Wu_Manber;;
+# StringSearch.(search ~k:2 ~pattern:"abcd" ~text:"abcd" |> report);;
+- : string = "Pattern matched with 2 errors at character 2 of text"
+# StringSearch.(search ~k:2 ~pattern:"abcd" ~text:"abd" |> report);;
+- : string = "Pattern matched with 2 errors at character 2 of text"
+# StringSearch.(search_right_leaning ~k:2 ~pattern:"abcd" ~text:"abcd" |> report);;
+- : string = "Pattern matched with 0 errors at character 4 of text"
+# StringSearch.(search_right_leaning ~k:2 ~pattern:"abcd" ~text:"abd" |> report);;
+- : string = "Pattern matched with 1 errors at character 3 of text"
+```
 
 # Future Work
 PRs are welcome, as long as you are understand that you would be releasing your
@@ -28,7 +58,5 @@ Here are extensions that I would like to have in the future.
 - Support Demarau Levenshtein distances.
 
 The limited expressions support should not be too difficult, but I haven't
-thought about if the rightmost match variant has weird interactions with limited
+thought about if the right-leaning variant has weird interactions with limited
 expressions.
-I don't currently have a strong enough understanding the full regular
-expressions part of Wu and Manber's report.

@@ -1,13 +1,36 @@
 {0 wu-manber index}
 
+The library can be used to search for a keyword/pattern in a body of text while
+allowing for spelling errors. We use Levenshtein distances as the notion of
+spelling errors, and the functions in the library take some error limit [k] and
+searches for substrings in the text with Levenshtein distance less than [k] from
+the pattern.
+
 {1 Library wu-manber}
 
 The entry point of this library is the module: {!module-Wu_Manber}.
 
-{2 High level interface example}
+{2 Wu and Manber Algorithm Variants}
+
+Two variants of the algorithm are provided.
+{ol {- The original version from Wu and Manber's technical report.}
+    {- A right-leaning variant, where delete edits are skipped at the end of the
+       pattern unless at the very end of text. This reports better edit
+       distances is some circumstances.}}
+
+The right-leaning variant is guaranteed to find a match if the original
+algorithm finds a match, and the error count reported by the variant is
+guaranteed to be no worse than the original. But the variant is a little harder
+to use since extra work is needed to check for matches at the end of the text.
+
+{2 High level Interface Example}
 
 We currently only provide the functions in {!module-Wu_Manber.StringSearch} as a
 high-level interface for using the library.
+
+The search function in this module stop after the first match, and returns the
+error count together with the number of characters of the text read by the
+algorithm.
 
 {[
 # #require "wu-manber";;
@@ -16,13 +39,13 @@ high-level interface for using the library.
 - : string = "Pattern matched with 2 errors at character 2 of text"
 # StringSearch.(search ~k:2 ~pattern:"abcd" ~text:"abd" |> report);;
 - : string = "Pattern matched with 2 errors at character 2 of text"
-# StringSearch.(search_rightmost ~k:2 ~pattern:"abcd" ~text:"abcd" |> report);;
+# StringSearch.(search_right_leaning ~k:2 ~pattern:"abcd" ~text:"abcd" |> report);;
 - : string = "Pattern matched with 0 errors at character 4 of text"
-# StringSearch.(search_rightmost ~k:2 ~pattern:"abcd" ~text:"abd" |> report);;
-- : string = "Pattern matched with 2 errors at character 3 of text"
+# StringSearch.(search_right_leaning ~k:2 ~pattern:"abcd" ~text:"abd" |> report);;
+- : string = "Pattern matched with 1 errors at character 3 of text"
 ]}
 
-{2 Mid level interface example}
+{2 Mid Level Interface Example}
 
 We currently only provide the functors in {!module-Wu_Manber.FirstMatch} as a
 mid-level interface.
@@ -30,7 +53,7 @@ mid-level interface.
 Examples of how this interface is used can be found in the code for
 {!module-Wu_Manber.StringSearch}.
 
-{2 Low level interface example}
+{2 Low Level Interface Example}
 
 An example of how to use the low level interfaces of the library can be found in
 the module: {!module-Wu_Manber.FirstMatch}.

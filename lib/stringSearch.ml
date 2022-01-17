@@ -3,8 +3,15 @@
 (** This module is intended to be used for searching as well as an example of
     properly using the mid-level functors in the [FirstMatch] module. *)
 
+(** The search function in this module stop after the first match, and returns
+    the error count together with the number of characters of the text read by
+    the algorithm. *)
+
+(** The following is a description of how to use the functions in
+    {!Wu_Manber.FirstMatch}. *)
+
 (** We first collect all the relevant operations of strings and characters in a
-    module. *)
+    module called [Pattern]. *)
 
 module Pattern = struct
   (** Module collecting operations for strings. *)
@@ -76,9 +83,9 @@ let search ~k ~pattern ~text =
   let seq = String.to_seq text in
   FirstMatch.first_match ~pattern ~k seq
 
-let search_rightmost ~k ~pattern ~text =
+let search_right_leaning ~k ~pattern ~text =
   let seq = String.to_seq text in
-  FirstMatch.first_rightmost_match ~pattern ~k seq
+  FirstMatch.first_right_leaning_match ~pattern ~k seq
 
 let report = FirstMatch.report
 ]}
@@ -91,13 +98,13 @@ let search ~k ~pattern ~text =
     the basic Wu and Manber algorithm, allowing for [~k] errors for a match.
     [~pattern] must have length less than or equal [63]. *)
 
-let search_rightmost ~k ~pattern ~text =
+let search_right_leaning ~k ~pattern ~text =
   let seq = String.to_seq text in
-  FirstMatch.first_rightmost_match ~pattern ~k seq
-(** [search_rightmost ~k ~pattern ~text] searches for the first match in a string using
-    the rightmost match variant of the Wu and Manber algorithm, allowing for
-    [~k] errors for a match. [~pattern] must have length less than or equal
-    [63]. *)
+  FirstMatch.first_right_leaning_match ~pattern ~k seq
+(** [search_right_leaning ~k ~pattern ~text] searches for the first match in a
+    string using the right leaning variant of the Wu and Manber algorithm,
+    allowing for [~k] errors for a match. [~pattern] must have length less than
+    or equal [63]. *)
 
 let report = FirstMatch.report
 (** [report] produces a texual description of the results of the above

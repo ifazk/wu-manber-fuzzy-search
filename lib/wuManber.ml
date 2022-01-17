@@ -11,13 +11,6 @@ module BitOps = struct
     I.lshift1 x
     |> I.logor mismatch
 
-  let initial_bvs ~k : I.t array =
-    let arr = Array.make (k+1) I.minus_one in
-    for i = 1 to k do
-      arr.(i) <- I.lshift1 arr.(i-1)
-    done;
-    arr
-
   let match_error ~pattern_length (bvs : I.t array) : int option =
     let idx = pattern_length - 1 in
     Array.find_index_opt (I.bit_is_zero ~n:idx) bvs
@@ -29,6 +22,13 @@ end
 
 module MakeWuManber (P : Patterns.Pattern) = struct
   open BitOps
+  let initial_bvs ~k : I.t array =
+    let arr = Array.make (k+1) I.minus_one in
+    for i = 1 to k do
+      arr.(i) <- I.lshift1 arr.(i-1)
+    done;
+    arr
+
   let next_bvs ~mismatch (input : I.t array) : I.t array =
     (* Self Transitions, i.e. R2/D2/S2 *)
     let len = Array.length input in
@@ -43,31 +43,43 @@ module MakeWuManber (P : Patterns.Pattern) = struct
         output.(i) && (I.lshift1 (rjd1 && rj1d1)) && rjd1
     done;
     output
-
 end
 
-module MakeRightmostWuManber (P : Patterns.Pattern) = struct
-  open BitOps
-  let next_bvs ~pattern_length ~mismatch (input : I.t array) : I.t array =
+module MakeRightLeaningWuManber (P : Patterns.Pattern) = struct
+  let initial_bvs ~k : I.t array =
+    Array.make (k+1) I.minus_one
+
+  let next_bvs ~mismatch (input : I.t array) : I.t array =
     (* Self Transitions, i.e. R2/D2/S2 *)
     let len = Array.length input in
-    let output = Array.map (shift_or ~mismatch) input in
+    let output = Array.map I.lshift1 input in
     (* inserts, shifts, deletes *)
-    for i = 1 to (len - 1) do
-      output.(i) <-
+    let rec loop i del_mask =
+      if (i = len) then
+        output
+      else
         let rjd1 = input.(i-1) in
-        let rj1d1 = output.(i-1) in
-        let end_delete_bv =
-          let max_end_deletes = len - i in
-          let end_deletes = max max_end_deletes pattern_length in
-          I.shift_left I.minus_one (pattern_length - end_deletes)
+        let shifted = output.(i) in
+        let del_and_shifted =
+          let open I.Infix in
+          (shifted && del_mask)
         in
-        let open I.Infix in
-        (* self-trans & shift (substitution and delete) & insert *)
-        output.(i) && (I.lshift1 (rjd1 && (rj1d1 || end_delete_bv))) && rjd1
-    done;
-    output
+        let del_mask = I.lshift1 @@ del_and_shifted in
+        let new_output_i =
+          let open I.Infix in
+          (* self-trans && delete & shift (substitution) & insert *)
+          (del_and_shifted || mismatch) && (I.lshift1 rjd1) && rjd1
+        in
+        let () = output.(i) <- new_output_i in
+        loop (i + 1) del_mask
+    in
+    (* delmask is the collection of all the delete epsilon transitions from the
+       input. *)
+    (* Do index 0 manually *)
+    let del_mask = I.lshift1 output.(0) in
+    let () = output.(0) <- I.logor output.(0) mismatch in
+    loop 1 del_mask
 
-  let feed_sentinel ~pattern_length (input : I.t array) : I.t array =
-    next_bvs ~pattern_length ~mismatch:(I.minus_one) input
+  let feed_sentinel (input : I.t array) : I.t array =
+    next_bvs ~mismatch:(I.minus_one) input
 end

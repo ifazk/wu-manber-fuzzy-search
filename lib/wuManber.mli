@@ -10,10 +10,6 @@ module BitOps : sig
       [~mismatch]. See the {!Matcher} module for a description of mismatch
       bitvectors. *)
 
-  val initial_bvs : k:int -> Optint.Int63.t array
-  (** [initial_bv ~k] creates a starting array of bitvectors used by the
-      algorithm. *)
-
   val match_error : pattern_length:int -> Optint.Int63.t array -> int option
   (** [match_error ~pattern_length] takes an array of bitvectors and returns
       [Some n] if theres a match with [n] errors, and [None] if there is no
@@ -27,23 +23,31 @@ end
 module MakeWuManber (P : Patterns.Pattern) : sig
   (** Basic Wu and Manber algorithm. *)
 
+  val initial_bvs : k:int -> Optint.Int63.t array
+  (** [initial_bv ~k] creates a starting array of bitvectors used by the
+      algorithm. *)
+
   val next_bvs : mismatch:Optint.Int63.t -> Optint.Int63.t array -> Optint.Int63.t array
   (** [next_bvs ~mismatch bvs] produces an updated bitvector array based on [~mismatch]. *)
 end
 
-module MakeRightmostWuManber (P : Patterns.Pattern) : sig
-  (** Wu and Manber algorithm modified for rightmost matches. *)
+module MakeRightLeaningWuManber (P : Patterns.Pattern) : sig
+  (** Wu and Manber algorithm modified for right leaning matches. *)
 
-  (** The rightmost version of the algorithm requires the user to feed [k]
+  (** The right leaning variant of the algorithm requires the user to feed [k]
       sentinel characters into the algorithm at the end of the text to get
       matches near the end, where [k] is the error limit that the algorithm was
       started with. See the code for the {!FirstMatch} module for an example. *)
 
-  val next_bvs : pattern_length:int -> mismatch:Optint.Int63.t -> Optint.Int63.t array -> Optint.Int63.t array
+  val initial_bvs : k:int -> Optint.Int63.t array
+  (** [initial_bv ~k] creates a starting array of bitvectors used by the
+      algorithm. *)
+
+  val next_bvs : mismatch:Optint.Int63.t -> Optint.Int63.t array -> Optint.Int63.t array
   (** [next_bvs ~pattern_length ~mismatch bvs] produces an updated bitvector array based on
       [~mismatch]. [pattern_length] must be less than or equal [63]. *)
 
-  val feed_sentinel : pattern_length:int -> Optint.Int63.t array -> Optint.Int63.t array
+  val feed_sentinel : Optint.Int63.t array -> Optint.Int63.t array
   (** [next_bvs ~pattern_length bvs] produces an updated bitvector array
       assuming that a sentinel character different from anything in the alphabet
       is being fed into the algorithm. [pattern_length] must be less than or
