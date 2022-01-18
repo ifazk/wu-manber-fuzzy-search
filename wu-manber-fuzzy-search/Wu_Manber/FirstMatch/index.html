@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>FirstMatch (wu-manber-fuzzy-search.Wu_Manber.FirstMatch)</title><link rel="stylesheet" href="../../../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.0.2"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../../../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="../index.html">Up</a> – <a href="../../index.html">wu-manber-fuzzy-search</a> &#x00BB; <a href="../index.html">Wu_Manber</a> &#x00BB; FirstMatch</nav><header class="odoc-preamble"><h1>Module <code><span>Wu_Manber.FirstMatch</span></code></h1><p>An module for fuzzy searching the first match in a sequence</p></header><nav class="odoc-toc"><ul><li><a href="#annotated-source-code-for-module">Annotated Source code for module</a></li></ul></nav><div class="odoc-content"><p>This module is intended to be used for searching as well as an example of properly using the low-level functions in the <code>WuManber</code> module.</p><div class="odoc-spec"><div class="spec module" id="module-Make" class="anchored"><a href="#module-Make" class="anchor"></a><code><span><span class="keyword">module</span> </span><span><a href="Make/index.html">Make</a></span><span> (<a href="Make/argument-1-P/index.html">P</a> : <a href="../Patterns/module-type-PatternWithElemEquality/index.html">Patterns.PatternWithElemEquality</a>) (<a href="Make/argument-2-M/index.html">M</a> : <a href="../Matcher/module-type-Matcher/index.html">Matcher.Matcher</a> <span class="keyword">with</span> <span><span class="keyword">type</span> <a href="../Matcher/module-type-Matcher/index.html#type-pattern">pattern</a> := <a href="Make/argument-1-P/index.html#type-t">P.t</a></span> <span class="keyword">and</span> <span><span class="keyword">type</span> <a href="../Matcher/module-type-Matcher/index.html#type-elem">elem</a> := <a href="Make/argument-1-P/index.html#type-elem">P.elem</a></span>) : <span class="keyword">sig</span> ... <span class="keyword">end</span></span></code></div><div class="spec-doc"><p><code>Make (P) (M)</code> creates a set of functions for finding the first match in a sequnce and reporting the number of errors and the position at which the match ends. See the functor documentation for more details.</p></div></div><p>Since this module is supposed to serve as an example of working with the low level api, we provide the code for the module as follows.</p><h2 id="annotated-source-code-for-module"><a href="#annotated-source-code-for-module" class="anchor"></a>Annotated Source code for module</h2><pre><code>open WuManber
+
+module Make (P : Patterns.PatternWithElemEquality) (M : Matcher.Matcher with type pattern := P.t and type elem := P.elem) = struct</code></pre><p>We are creating a functor that ranges over patterns and matchers for those patterns.</p><p>A patterns contains characters, and a matcher takes a character <code>c</code> and outputs a bit-vector indicating which characters of the pattern match <code>c</code>.</p><pre><code>module WM = WuManber</code></pre><p>We will use the low level functions <code>initial_bvs</code> and <code>next_bvs</code> from the <a href="../WuManber/WuManber/index.html"><code>WuManber.WuManber</code></a> module.</p><p>We think of <code>initial_bvs</code> as an initial state of an automaton, and <code>next_bvs</code> makes the automaton take steps to the next state using outputs of matchers as inputs. The <a href="../WuManber/BitOps/index.html#val-match_error"><code>WuManber.BitOps.match_error</code></a> and <a href="../WuManber/BitOps/index.html#val-is_match"><code>WuManber.BitOps.is_match</code></a> functions are used to check if the automaton is in a final state, i.e. if there is a fuzzy match with the pattern.</p><pre><code>let first_match ~pattern ~k (s : P.elem Seq.t) =
+  let pattern_length = P.length pattern in
+  let matcher = new M.matcher pattern in
+  let rec find count bvs s =
+    match BitOps.match_error ~pattern_length bvs with
+    | Some n -&gt; Some (count, n, bvs)
+    | None -&gt;
+      begin match s () with
+        | Seq.Cons (c, s) -&gt; find (count + 1) (WM.next_bvs ~mismatch:(matcher#mismatch c) bvs) s
+        | Seq.Nil -&gt; None
+      end
+  in
+  find 0 (WM.initial_bvs ~k) s</code></pre><p>The above function creates a matcher from the <code>~pattern</code>, and uses it to go through the sequence <code>s</code>, one character at a time, until a match in found.</p><p>We next implement the right leaning variant of the function.</p><pre><code>module WMR = RightLeaningWuManber</code></pre><p>The <a href="../WuManber/RightLeaningWuManber/index.html"><code>WuManber.RightLeaningWuManber</code></a> module contains the low level functions <code>initial_bvs</code>, <code>next_bvs</code>, and <code>feed_sentinel</code>. The functions and notions of automaton are similar to the regular version of the algorithm.</p><p>But this version of the algorithm does not match delete edits at the end of the pattern, and so matches at the end of the text won't be reported.</p><p>To recover the deletes edits at the very end of the text, we feed sentinel characters into the automaton using the <code>feed_sentinel</code> function. We need feed a maximum of <code>k</code> sentinel characters into the automaton to check for matches.</p><pre><code>let first_right_leaning_match ~pattern ~k (s : P.elem Seq.t) =
+  let pattern_length = P.length pattern in
+  let matcher = new M.matcher pattern in
+  let rec find_sentinel count bvs n =
+    if n = 0 then
+      None
+    else
+      let bvs = WMR.feed_sentinel bvs in
+      match BitOps.match_error ~pattern_length bvs with
+      | Some n -&gt; Some (count, n, bvs)
+      | None -&gt;
+        find_sentinel count bvs (n - 1)
+  in
+  let rec find count bvs s =
+    match BitOps.match_error ~pattern_length bvs with
+    | Some n -&gt; Some (count, n, bvs)
+    | None -&gt;
+      begin match s () with
+        | Seq.Cons (c, s) -&gt; find (count + 1) (WMR.next_bvs ~mismatch:(matcher#mismatch c) bvs) s
+        | Seq.Nil -&gt; find_sentinel count bvs k
+      end
+  in
+  find 0 (WMR.initial_bvs ~k) s</code></pre><p>The above function creates a matcher from the <code>~pattern</code>, and uses it to go through the sequence <code>s</code>, one character at a time, until a match in found. If the end of text is reached, <code>k</code> sentinel characters are fed into the automaton to search for a match at the end of the text.</p><pre><code>let report = function
+  | None -&gt; &quot;Could not find pattern in text&quot;
+  | Some (c, e, _) -&gt; Printf.sprintf &quot;Pattern matched with %d errors at character %d of text&quot; e c</code></pre><p>The above function is a utility function which creates a texual description of the output of the first match functions.</p><pre><code>end</code></pre></div></body></html>
