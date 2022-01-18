@@ -45,17 +45,43 @@ The documentation for the library can be found
 - : string = "Pattern matched with 1 errors at character 3 of text"
 ```
 
+# Limits
+The library only supports patterns of length 63. This is unlikely to be extended
+any time soon.
+
+# Runtime and Space Requirements
+To search with an edit distance `k`, we need to track of an array of `Int63.t`
+of size `k+1`. To process a character in the text, we usually need around `6`
+bitwise operations for every element of the array.
+
+The high-level apis also use some matcher objects, these store patterns, arrays,
+or hashtables which require additional space.
+
+# Reference
+The shift-and version of the algorithm is described in S. Wu and U. Manber, Fast
+Text Searching With Errors, tech. rep. TR 91-11, University of Arizona, 1991.
+
+The shift-or version is described in the Wikipedia article for [Bitap
+Algorithm](https://en.wikipedia.org/wiki/Bitap_algorithm).
+
+# Related packages
+[`agrep`](https://github.com/xavierleroy/ocamlagrep) implements the shift-and
+version, but much of it is implmented in C.
+
+There's also the main `agrep` unix tool tool itself by Manber and Wu.
+
 # Future Work
 PRs are welcome, as long as you are understand that you would be releasing your
 code under CC0.
 
 Here are extensions that I would like to have in the future.
-- Add versions of the algorithm that mutates an array instead of creating new
+- Add versions of the algorithm that mutate an array instead of creating new
   arrays all the time.
 - Add specialized versions for exact matches and small error limits.
-- Supparting multi-match and limited expressions.
+- Support multi-match and limited expressions.
 - Full Regular Expressions Support.
-- Support Demarau Levenshtein distances.
+- Support Demarau-Levenshtein distances.
+- Support long patterns.
 
 The limited expressions support should not be too difficult, but I haven't
 thought about if the right-leaning variant has weird interactions with limited
