@@ -1,19 +1,2 @@
-(executable
-  (name string_tests)
-  (public_name string_tests)
-  (modules string_tests)
-  (libraries Wu_Manber))
-
-(executable
-  (name automata_tests)
-  (public_name automata_tests)
-  (modules automata_tests)
-  (libraries pp-binary-ints slow_matcher))
-
-(library
-  (name slow_matcher)
-  (modules slowMatcher)
-  (libraries Wu_Manber))
-
 (cram
- (deps %{bin:string_tests} %{bin:automata_tests}))
+ (deps ../test-runners/string_tests.exe ../test-runners/automata_tests.exe))
