@@ -6,7 +6,7 @@ open WuManber
 module Make (P : Patterns.PatternWithFoldLeft) = struct
   module Match = Matcher.SimpleMismatch (P)
 
-  module WM = MakeWuManber (P)
+  module WM = WuManber
 
   let slow ~k ~pattern ~text =
     P.fold_left
@@ -14,7 +14,7 @@ module Make (P : Patterns.PatternWithFoldLeft) = struct
       (WM.initial_bvs ~k)
       text
 
-  module WMR = MakeRightLeaningWuManber (P)
+  module WMR = RightLeaningWuManber
 
   let right_leaning ~k ~pattern ~sentinels ~text =
     let rec int_fold ~f ~n ~init =

@@ -20,7 +20,7 @@ module BitOps = struct
     |> Option.is_some
 end
 
-module MakeWuManber (P : Patterns.Pattern) = struct
+module WuManber = struct
   open BitOps
   let initial_bvs ~k : I.t array =
     let arr = Array.make (k+1) I.minus_one in
@@ -45,7 +45,7 @@ module MakeWuManber (P : Patterns.Pattern) = struct
     output
 end
 
-module MakeRightLeaningWuManber (P : Patterns.Pattern) = struct
+module RightLeaningWuManber = struct
   let initial_bvs ~k : I.t array =
     Array.make (k+1) I.minus_one
 

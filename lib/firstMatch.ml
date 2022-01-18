@@ -1,7 +1,7 @@
 open WuManber
 
 module Make (P : Patterns.Pattern) (M : Matcher.Matcher with type pattern := P.t and type elem := P.elem) = struct
-  module WM = MakeWuManber (P)
+  module WM = WuManber
 
   let first_match ~pattern ~k (s : P.elem Seq.t) =
     let pattern_length = P.length pattern in
@@ -17,7 +17,7 @@ module Make (P : Patterns.Pattern) (M : Matcher.Matcher with type pattern := P.t
     in
     find 0 (WM.initial_bvs ~k) s
 
-  module WMR = MakeRightLeaningWuManber (P)
+  module WMR = RightLeaningWuManber
 
   let first_right_leaning_match ~pattern ~k (s : P.elem Seq.t) =
     let pattern_length = P.length pattern in

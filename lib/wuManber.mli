@@ -20,7 +20,7 @@ module BitOps : sig
       if theres a match. [pattern_length] must be less than or equal [63]. *)
 end
 
-module MakeWuManber (P : Patterns.Pattern) : sig
+module WuManber : sig
   (** Basic Wu and Manber algorithm. *)
 
   val initial_bvs : k:int -> Optint.Int63.t array
@@ -31,7 +31,7 @@ module MakeWuManber (P : Patterns.Pattern) : sig
   (** [next_bvs ~mismatch bvs] produces an updated bitvector array based on [~mismatch]. *)
 end
 
-module MakeRightLeaningWuManber (P : Patterns.Pattern) : sig
+module RightLeaningWuManber : sig
   (** Wu and Manber algorithm modified for right leaning matches. *)
 
   (** The right leaning variant of the algorithm requires the user to feed [k]

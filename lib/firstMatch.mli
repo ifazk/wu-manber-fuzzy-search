@@ -49,11 +49,11 @@ A patterns contains characters, and a matcher takes a character [c] and outputs
 a bit-vector indicating which characters of the pattern match [c].
 
 {[
-  module WM = MakeWuManber (P)
+  module WM = WuManber
 ]}
 
-We pass the pattern module [P] to the {!WuManber.MakeWuManber} functor to get
-access the low level functions [initial_bvs] and [next_bvs].
+We will use the low level functions [initial_bvs] and [next_bvs]
+from the {!WuManber.WuManber} module.
 
 We think of [initial_bvs] as an initial state of an automaton, and [next_bvs]
 makes the automaton take steps to the next state using outputs of matchers as
@@ -83,15 +83,15 @@ through the sequence [s], one character at a time, until a match in found.
 We next implement the right leaning variant of the function.
 
 {[
-  module WMR = MakeRightLeaningWuManber (P)
+  module WMR = RightLeaningWuManber
 ]}
 
-We pass the pattern module [P] to the {!WuManber.MakeRightLeaningWuManber}
-functor to get access the low level functions [initial_bvs], [next_bvs], and
-[feed_sentinel] functions. The functions and notions of automaton are similar to
-the regular version of the algorithm.
+The {!WuManber.RightLeaningWuManber} module contains the low level functions
+[initial_bvs], [next_bvs], and [feed_sentinel]. The functions and notions of
+automaton are similar to the regular version of the algorithm.
 
-But this version of the algorithm does not match.
+But this version of the algorithm does not match delete edits at the end of the
+pattern, and so matches at the end of the text won't be reported.
 
 To recover the deletes edits at the very end of the text, we feed sentinel
 characters into the automaton using the [feed_sentinel] function. We need feed a
