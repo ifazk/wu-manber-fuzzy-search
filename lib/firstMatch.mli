@@ -4,7 +4,7 @@
     properly using the low-level functions in the [WuManber] module. *)
 
 module Make
-    (P : Patterns.Pattern)
+    (P : Patterns.PatternWithElemEquality)
     (M : Matcher.Matcher with type pattern := P.t and type elem := P.elem) : sig
 
   (** The search functions in this module stop after the first match, and returns
@@ -39,7 +39,7 @@ end
 {[
 open WuManber
 
-module Make (P : Patterns.Pattern) (M : Matcher.Matcher with type pattern := P.t and type elem := P.elem) = struct
+module Make (P : Patterns.PatternWithElemEquality) (M : Matcher.Matcher with type pattern := P.t and type elem := P.elem) = struct
 ]}
 
 We are creating a functor that ranges over patterns and matchers for those

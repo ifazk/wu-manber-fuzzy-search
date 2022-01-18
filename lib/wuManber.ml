@@ -7,6 +7,10 @@ module I = Int63
 module BitOps = struct
   (** A collection of bitwise operations used in the Wu and Manber algorithm. *)
 
+  (** [shift_or ~mismatch bv] takes a bitvector [bv] and returns a new bitvector
+      by doing a left shift of [bv] and then doing a logical or with
+      [~mismatch]. See the {!Matcher} module for a description of mismatch
+      bitvectors. *)
   let shift_or ~mismatch x : I.t =
     I.lshift1 x
     |> I.logor mismatch

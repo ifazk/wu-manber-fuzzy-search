@@ -1,6 +1,6 @@
 open WuManber
 
-module Make (P : Patterns.Pattern) (M : Matcher.Matcher with type pattern := P.t and type elem := P.elem) = struct
+module Make (P : Patterns.PatternWithElemEquality) (M : Matcher.Matcher with type pattern := P.t and type elem := P.elem) = struct
   module WM = WuManber
 
   let first_match ~pattern ~k (s : P.elem Seq.t) =

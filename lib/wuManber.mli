@@ -4,12 +4,6 @@
 module BitOps : sig
   (** A collection of bitwise operations used in the Wu and Manber algorithm. *)
 
-  val shift_or : mismatch:Optint.Int63.t -> Optint.Int63.t -> Optint.Int63.t
-  (** [shift_or ~mismatch bv] takes a bitvector [bv] and returns a new bitvector
-      by doing a left shift of [bv] and then doing a logical or with
-      [~mismatch]. See the {!Matcher} module for a description of mismatch
-      bitvectors. *)
-
   val match_error : pattern_length:int -> Optint.Int63.t array -> int option
   (** [match_error ~pattern_length] takes an array of bitvectors and returns
       [Some n] if theres a match with [n] errors, and [None] if there is no

@@ -1,10 +1,5 @@
 (** Collection of functors for creating matchers *)
 
-module SimpleMismatch (P : Patterns.PatternWithFoldRight) : sig
-  val push_mismatch : P.elem -> P.elem -> Optint.Int63.t -> Optint.Int63.t
-  val mismatch_bv : pattern:P.t -> P.elem -> Optint.Int63.t
-end
-
 module type Matcher = sig
   (** Module type for Matchers. *)
 
@@ -28,6 +23,17 @@ module type Matcher = sig
       mismatch. For a pattern [p_0,...,p_n] and a character [c], the mismatch
       bitvector contains a [0] in the i-th bit if [p_i = c] and [1] otherwise.
   *)
+end
+
+(** {1 Levenshtein Distance Matchers} *)
+
+(** The following are a collection of matchers for simple patterns. *)
+
+module SimpleMismatch (P : Patterns.PatternWithFoldRight) : sig
+  (** A utility functior used for creating matchers. *)
+
+  val push_mismatch : P.elem -> P.elem -> Optint.Int63.t -> Optint.Int63.t
+  val mismatch_bv : pattern:P.t -> P.elem -> Optint.Int63.t
 end
 
 module MakeSlowMatcher (P : Patterns.PatternWithFoldRight) : sig

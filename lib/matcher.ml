@@ -1,6 +1,16 @@
 module I = Utils.Int63
 open Patterns
 
+module type Matcher = sig
+  type pattern
+  type elem
+
+  class matcher : pattern ->
+    object
+      method mismatch : elem -> I.t
+    end
+end
+
 module SimpleMismatch (P : PatternWithFoldRight) = struct
   let push_mismatch e1 e2 bv : I.t =
     let shifted = I.lshift1 bv in
@@ -11,16 +21,6 @@ module SimpleMismatch (P : PatternWithFoldRight) = struct
 
   let mismatch_bv ~pattern char : I.t =
     P.fold_right (push_mismatch char) pattern I.zero
-end
-
-module type Matcher = sig
-  type pattern
-  type elem
-
-  class matcher : pattern ->
-    object
-      method mismatch : elem -> I.t
-    end
 end
 
 module MakeSlowMatcher (P : PatternWithFoldRight) : Matcher with type pattern := P.t and type elem := P.elem = struct
