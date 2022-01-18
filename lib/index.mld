@@ -43,6 +43,10 @@ algorithm.
 - : string = "Pattern matched with 0 errors at character 4 of text"
 # StringSearch.(search_right_leaning ~k:2 ~pattern:"abcd" ~text:"abd" |> report);;
 - : string = "Pattern matched with 1 errors at character 3 of text"
+# StringSearch.(search ~k:2 ~pattern:"brown" ~text:"quick brown fox" |> report);;
+- : string = "Pattern matched with 2 errors at character 9 of text"
+# StringSearch.(search_right_leaning ~k:2 ~pattern:"brown" ~text:"quick brown fox" |> report);;
+- : string = "Pattern matched with 0 errors at character 11 of text"
 ]}
 
 {2 Mid Level Interface Example}
