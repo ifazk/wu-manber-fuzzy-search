@@ -1,4 +1,4 @@
-# wu-manber
+# wu-manber-fuzzy-search
 An OCaml Implementation of the wu-manber fuzzy search algorithm using `Int63`
 from the `optint` package as the underlying bitvectors.
 
@@ -28,12 +28,12 @@ for matches at the end of the text.
 
 # Documentation
 The documentation for the library can be found
-[here](https://ifazk.github.io/wu-manber/).
+[here](https://ifazk.github.io/wu-manber-fuzzy-search/).
 
 # Examples
 
 ```ocaml
-# #require "wu-manber";;
+# #require "wu-manber-fuzzy-search";;
 # open Wu_Manber;;
 # StringSearch.(search ~k:2 ~pattern:"abcd" ~text:"abcd" |> report);;
 - : string = "Pattern matched with 2 errors at character 2 of text"

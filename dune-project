@@ -1,5 +1,5 @@
 (lang dune 2.8)
-(name wu-manber)
+(name wu-manber-fuzzy-search)
 
 (cram enable)
 
@@ -7,13 +7,13 @@
 (license CC0-1.0)
 (authors "Ifaz Kabir")
 (maintainers "Ifaz Kabir")
-(source (github ifazk/wu-manber))
-(documentation https://ifazk.github.io/wu-manber/)
+(source (github ifazk/wu-manber-fuzzy-search))
+(documentation https://ifazk.github.io/wu-manber-fuzzy-search/)
 (version 0.1.0)
 
 (package
- (name wu-manber)
- (synopsis "Wu-Manber approximate string matching")
+ (name wu-manber-fuzzy-search)
+ (synopsis "Wu-Manber approximate string matching / fuzzy search")
  (description
    "\| A Pure OCaml implementation of the Wu Manber approximate string matching
    "\| algorithm for short patterns.

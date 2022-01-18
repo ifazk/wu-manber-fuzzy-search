@@ -1,5 +1,5 @@
 (library
  (name Wu_Manber)
- (public_name wu-manber)
+ (public_name wu-manber-fuzzy-search)
  (libraries optint))
-(documentation (package wu-manber))
+(documentation (package wu-manber-fuzzy-search))
