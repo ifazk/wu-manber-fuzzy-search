@@ -2,9 +2,9 @@
 
 module Int63 = struct
   include Optint.Int63
-  let lshift1 x = shift_left x 1
+  let[@inline] lshift1 x = shift_left x 1
 
-  let bit_is_zero ~n x : bool =
+  let[@inline] bit_is_zero ~n x : bool =
     let mask = shift_left one n in
     let la = logand mask x in
     equal la zero
