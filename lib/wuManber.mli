@@ -18,11 +18,12 @@ module WuManber : sig
   (** Basic Wu and Manber algorithm. *)
 
   val initial_bvs : k:int -> Optint.Int63.t array
-  (** [initial_bv ~k] creates a starting array of bitvectors used by the
+  (** [initial_bvs ~k] creates a starting array of bitvectors used by the
       algorithm. *)
 
   val next_bvs : mismatch:Optint.Int63.t -> Optint.Int63.t array -> Optint.Int63.t array
   (** [next_bvs ~mismatch bvs] produces an updated bitvector array based on [~mismatch]. *)
+
 end
 
 module RightLeaningWuManber : sig
@@ -34,7 +35,7 @@ module RightLeaningWuManber : sig
       started with. See the code for the {!FirstMatch} module for an example. *)
 
   val initial_bvs : k:int -> Optint.Int63.t array
-  (** [initial_bv ~k] creates a starting array of bitvectors used by the
+  (** [initial_bvs ~k] creates a starting array of bitvectors used by the
       algorithm. *)
 
   val next_bvs : mismatch:Optint.Int63.t -> Optint.Int63.t array -> Optint.Int63.t array
@@ -42,7 +43,7 @@ module RightLeaningWuManber : sig
       [~mismatch]. [pattern_length] must be less than or equal [63]. *)
 
   val feed_sentinel : Optint.Int63.t array -> Optint.Int63.t array
-  (** [next_bvs ~pattern_length bvs] produces an updated bitvector array
+  (** [feed_sentinel ~pattern_length bvs] produces an updated bitvector array
       assuming that a sentinel character different from anything in the alphabet
       is being fed into the algorithm. [pattern_length] must be less than or
       equal [63]. *)

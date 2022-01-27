@@ -12,3 +12,8 @@
   (name slow_matcher)
   (modules slowMatcher)
   (libraries Wu_Manber))
+
+(executable
+  (name specialized_compare)
+  (modules specialized_compare)
+  (libraries pp-binary-ints Wu_Manber))

@@ -11,6 +11,15 @@ module Int63 = struct
 
   let get ~n x : bool =
     not @@ bit_is_zero ~n x
+
+  (** [shift_or ~mismatch bv] takes a bitvector [bv] and returns a new bitvector
+      by doing a left shift of [bv] and then doing a logical or with
+      [~mismatch]. See the {!Matcher} module for a description of mismatch
+      bitvectors. *)
+  let[@inline] shift_or ~mismatch x : t =
+    lshift1 x
+    |> logor mismatch
+
 end
 
 module Array = struct

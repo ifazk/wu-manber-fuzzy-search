@@ -1,2 +1,5 @@
 (cram
- (deps ../test-runners/string_tests.exe ../test-runners/automata_tests.exe))
+ (deps
+ ../test-runners/string_tests.exe
+ ../test-runners/automata_tests.exe
+ ../test-runners/specialized_compare.exe))
